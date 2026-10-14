@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBTI로 나의 포켓몬 찾기 ⚡</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            jua: ['Jua', 'sans-serif'],
+            sans: ['Noto Sans KR', 'sans-serif'],
+          },
+          colors: {
+            pokeBg: '#FFFDF0',
+            pokeYellow: '#FFD700',
+            pokeWarmYellow: '#FEF08A',
+            pokeAmber: '#D97706',
+            pokeBrown: '#78350F',
+            cardBg: '#FFFDF5',
+          },
+          boxShadow: {
+            'glow': '0 0 25px rgba(251, 191, 36, 0.45)',
+            'card-3d': '0 20px 35px -10px rgba(180, 83, 9, 0.25), 0 0 15px rgba(253, 224, 71, 0.3)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FFFDF0;
+      background-image: 
+        radial-gradient(#FDE047 1.5px, transparent 1.5px),
+        radial-gradient(#FDE047 1.5px, #FFFDF0 1.5px);
+      background-size: 60px 60px;
+      background-position: 0 0, 30px 30px;
+    }
+
+    .glass-card {
+      background: rgba(255, 253, 245, 0.92);
+      backdrop-filter: blur(12px);
+      border: 3px solid #FDE047;
+    }
+
+    .tilt-card {
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+    }
+
+    .shiny-sparkle {
+      position: absolute;
+      pointer-events: none;
+      animation: floatSparkle 3s infinite ease-in-out;
+    }
+
+    @keyframes floatSparkle {
+      0%, 100% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0.3; }
+      50% { transform: translateY(-12px) scale(1.2) rotate(180deg); opacity: 1; }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6)); }
+      50% { filter: drop-shadow(0 0 28px rgba(245, 158, 11, 0.85)); }
+    }
+
+    .pokemon-hero-img {
+      animation: pulseGlow 4s infinite ease-in-out;
+      transform: translateZ(40px);
+    }
+
+    /* Custom particle confetti */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: popParticle 0.8s ease-out forwards;
+    }
+
+    @keyframes popParticle {
+      0% { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tw-translate-x), var(--tw-translate-y)) scale(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 font-sans flex flex-col justify-between items-center p-4 md:p-8 select-none">
+
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="shiny-sparkle top-10 left-10 text-amber-400 text-3xl">✨</div>
+    <div class="shiny-sparkle top-1/4 right-12 text-yellow-500 text-2xl" style="animation-delay: 1s;">⚡</div>
+    <div class="shiny-sparkle bottom-20 left-16 text-amber-500 text-3xl" style="animation-delay: 2s;">🌟</div>
+    <div class="shiny-sparkle bottom-10 right-20 text-yellow-400 text-2xl" style="animation-delay: 1.5s;">✨</div>
+  </div>
+
+  <main class="w-full max-w-4xl z-10 my-auto">
+    <!-- Header Title -->
+    <header class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-300 text-amber-800 text-sm font-bold mb-3 shadow-sm">
+        <span>⚡ 16가지 성격 유형 완벽 매칭</span>
+      </div>
+      <h1 class="font-jua text-4xl sm:text-5xl md:text-6xl text-amber-800 drop-shadow-sm tracking-wide">
+        MBTI로 나의 포켓몬 찾기
+      </h1>
+      <p class="text-amber-900/80 font-medium text-base sm:text-lg mt-2">
+        나의 성격 유형을 선택하고 환상의 포켓몬 파트너를 만나보세요!
+      </p>
+    </header>
+
+    <section id="selection-screen" class="glass-card rounded-3xl p-6 sm:p-8 shadow-card-3d">
+      <div class="flex items-center justify-between mb-6 pb-3 border-b border-amber-200/60">
+        <h2 class="font-jua text-2xl text-amber-900 flex items-center gap-2">
+          <span>🎮</span> MBTI 유형을 선택하세요
+        </h2>
+        <span class="text-xs font-semibold text-amber-700 bg-amber-100 px-3 py-1 rounded-full">16 Types</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4" id="mbti-grid">
+        <!-- Generated via JavaScript -->
+      </div>
+    </section>
+
+    <section id="result-screen" class="hidden">
+      <div id="tilt-container" class="tilt-card glass-card rounded-3xl p-6 sm:p-10 shadow-card-3d relative overflow-hidden">
+        
+        <!-- Header Tag -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+          <div class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-jua text-lg sm:text-xl px-5 py-1.5 rounded-full shadow-md">
+            <span id="res-mbti">ESTP</span>
+            <span class="text-xs bg-white/20 px-2 py-0.5 rounded-md font-sans">MY TYPE</span>
+          </div>
+          <span id="res-type-badge" class="px-4 py-1 rounded-full text-xs sm:text-sm font-bold bg-amber-100 text-amber-800 border border-amber-300">
+            전기 타입
+          </span>
+        </div>
+
+        <!-- Main Display Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          
+          <!-- Artwork Column -->
+          <div class="md:col-span-5 flex flex-col items-center justify-center relative">
+            <div class="w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-gradient-to-b from-amber-200/50 to-yellow-100/80 border-4 border-yellow-300 flex items-center justify-center p-4 relative shadow-inner">
+              
+              <!-- Image Skeleton Loader -->
+              <div id="img-loader" class="absolute inset-0 flex flex-col items-center justify-center text-amber-600 gap-2">
+                <div class="w-10 h-10 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-xs font-bold font-jua">포켓몬 불러오는 중...</span>
+              </div>
+
+              <!-- High Res Artwork Image -->
+              <img id="res-img" src="" alt="포켓몬 이미지" 
+                   class="pokemon-hero-img w-full h-full object-contain relative z-10 transition-all duration-300 opacity-0"
+                   onload="handleImageLoad()"
+                   onerror="handleImageError()" />
+
+              <!-- Fallback Badge Graphic (Hidden by default) -->
+              <div id="res-fallback" class="hidden z-10 flex flex-col items-center justify-center text-amber-800">
+                <span class="text-6xl mb-2" id="res-fallback-emoji">⚡</span>
+                <span class="font-jua text-xl" id="res-fallback-name">피카츄</span>
+              </div>
+            </div>
+
+            <!-- Pokemon Name -->
+            <h3 id="res-name" class="font-jua text-3xl sm:text-4xl text-amber-900 mt-4 tracking-wide text-center">
+              피카츄
+            </h3>
+            <p id="res-genus" class="text-xs text-amber-700/80 font-bold -mt-1">쥐포켓몬</p>
+          </div>
+
+          <!-- Description Column -->
+          <div class="md:col-span-7 flex flex-col gap-4">
+            
+            <!-- Catchphrase / Matching Reason -->
+            <div class="bg-white/80 rounded-2xl p-5 border border-amber-200/80 shadow-sm">
+              <h4 class="font-jua text-lg text-amber-900 mb-2 flex items-center gap-1.5">
+                <span>💬</span> 성격 케미스트리 분석
+              </h4>
+              <p id="res-reason" class="text-slate-700 text-sm sm:text-base leading-relaxed font-medium break-keep">
+                밝고 호기심이 많아 주변에 번개 같은 에너지를 전파합니다.
+              </p>
+            </div>
+
+            <!-- Compatibility Section -->
+            <div class="bg-gradient-to-r from-amber-100/80 to-yellow-100/80 rounded-2xl p-4 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center text-xl shadow-md">
+                  ❤️
+                </div>
+                <div>
+                  <div class="text-xs text-amber-800 font-bold">최고의 궁합 콤비</div>
+                  <div id="res-compat-name" class="font-jua text-lg text-amber-950">INTJ (뮤츠)</div>
+                </div>
+              </div>
+              <button onclick="selectMBTIByCompat()" class="w-full sm:w-auto px-4 py-2 bg-white hover:bg-amber-50 text-amber-800 border border-amber-300 rounded-xl text-xs font-bold transition-all shadow-sm">
+                궁합 확인하기 ➔
+              </button>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-3 mt-2">
+              <button onclick="resetSelection()" class="flex-1 py-3.5 px-6 rounded-2xl bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white font-jua text-lg shadow-md transition-all flex items-center justify-center gap-2">
+                <span>🔄</span> 다시 선택하기
+              </button>
+              <button onclick="copyShareLink()" class="py-3.5 px-5 rounded-2xl bg-amber-100 hover:bg-amber-200 active:scale-[0.98] text-amber-800 border border-amber-300 font-jua text-lg transition-all flex items-center justify-center gap-1 shadow-sm">
+                <span>📋</span> 공유
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notification Box -->
+  <div id="toast" class="fixed bottom-6 bg-slate-900/90 text-white text-sm font-medium px-5 py-2.5 rounded-full shadow-lg transition-all duration-300 opacity-0 transform translate-y-4 pointer-events-none z-50">
+    결과가 복사되었습니다!
+  </div>
+
+  <footer class="mt-8 text-center text-xs text-amber-800/60 font-medium z-10">
+    © MBTI Pokemon Matcher • High Quality Official Pokemon Artwork
+  </footer>
+
+  <script>
+    const pokemonDatabase = {
+      "ISTJ": {
+        id: 9, // 거북왕
+        name: "거북왕",
+        type: "물 타입",
+        genus: "껍질포켓몬",
+        emoji: "🐢",
+        reason: "매사에 신중하고 원칙을 준수하는 책임감 끝판왕입니다. 단단한 껍질과 강력한 물대포처럼 신뢰할 수 있는 든든한 보호막이 되어줍니다.",
+        compat: "ENFP",
+        compatName: "ENFP (피카츄)"
+      },
+      "ISFJ": {
+        id: 242, // 해피너스
+        name: "해피너스",
+        type: "노멀 타입",
+        genus: "행복포켓몬",
+        emoji: "💖",
+        reason: "따뜻한 온기와 세심한 배려로 주변 사람들을 간호합니다. 타인의 필요를 누구보다 빠르게 캐치하여 상처를 보듬어주는 힐러입니다.",
+        compat: "ENTP",
+        compatName: "ENTP (팬텀)"
+      },
+      "INFJ": {
+        id: 151, // 뮤
+        name: "뮤",
+        type: "에스퍼 타입",
+        genus: "신종포켓몬",
+        emoji: "✨",
+        reason: "깊은 통찰력과 이상적인 꿈을 품고 조용히 타인에게 긍정적인 영향을 미칩니다. 신비로운 직관력으로 세상의 진리를 탐구합니다.",
+        compat: "ENTP",
+        compatName: "ENTP (팬텀)"
+      },
+      "INTJ": {
+        id: 150, // 뮤츠
+        name: "뮤츠",
+        type: "에스퍼 타입",
+        genus: "유전자포켓몬",
+        emoji: "🔮",
+        reason: "철저한 데이터 분석과 독립적인 사고로 미래를 설계하는 완벽주의 전략가입니다. 높은 지능과 논리로 목표를 정밀하게 달성합니다.",
+        compat: "ENFP",
+        compatName: "ENFP (피카츄)"
+      },
+      "ISTP": {
+        id: 448, // 루카리오
+        name: "루카리오",
+        type: "격투/강철 타입",
+        genus: "파동포켓몬",
+        emoji: "🐺",
+        reason: "냉철한 판단력과 뛰어난 감각으로 즉각적인 문제 해결에 강합니다. 말보다 행동으로 파동을 감지하듯 도전을 깔끔하게 완수합니다.",
+        compat: "ENFJ",
+        compatName: "ENFJ (토게키스)"
+      },
+      "ISFP": {
+        name: "메타몽",
+        id: 132, // 메타몽
+        type: "노멀 타입",
+        genus: "변신포켓몬",
+        emoji: "🟣",
+        reason: "온순하고 유연하며 주변 환경에 맞춰 자신을 변형할 수 있는 감성 아티스트입니다. 타인에게 편안함을 선물하며 유연하게 스며듭니다.",
+        compat: "ENFJ",
+        compatName: "ENFJ (토게키스)"
+      },
+      "INFP": {
+        id: 133, // 이브이
+        name: "이브이",
+        type: "노멀 타입",
+        genus: "진화포켓몬",
+        emoji: "🦊",
+        reason: "무한한 가능성과 풍부한 감수성을 가슴속에 간직하고 있습니다. 어떤 방향으로든 아름답게 진화할 수 있는 순수한 꿈나무입니다.",
+        compat: "ENTJ",
+        compatName: "ENTJ (자시안)"
+      },
+      "INTP": {
+        id: 65, // 후딘
+        name: "후딘",
+        type: "에스퍼 타입",
+        genus: "초능력포켓몬",
+        emoji: "🥄",
+        reason: "5000의 IQ를 가진 지적 호기심의 대표주자입니다. 복잡한 논리와 현상의 원리를 지속적으로 탐구하는 창의적 아이디어 창고입니다.",
+        compat: "ENTJ",
+        compatName: "ENTJ (자시안)"
+      },
+      "ESTP": {
+        id: 6, // 리자몽
+        name: "리자몽",
+        type: "불꽃/비행 타입",
+        genus: "화염포켓몬",
+        emoji: "🔥",
+        reason: "화끈한 에너지와 결단력으로 불꽃처럼 현장에 뛰어듭니다. 위험을 두려워하지 않는 담력과 짜릿한 모험을 즐기는 개척자입니다.",
+        compat: "ISFJ",
+        compatName: "ISFJ (해피너스)"
+      },
+      "ESFP": {
+        id: 39, // 푸린
+        name: "푸린",
+        type: "노멀/페어리 타입",
+        genus: "풍선포켓몬",
+        emoji: "🎤",
+        reason: "통통 튀는 매력과 유쾌한 노래로 언제나 스포트라이트를 받는 분위기 메이커입니다. 사람들 사이에서 스타성을 아낌없이 발휘합니다.",
+        compat: "ISTJ",
+        compatName: "ISTJ (거북왕)"
+      },
+      "ENFP": {
+        id: 25, // 피카츄
+        name: "피카츄",
+        type: "전기 타입",
+        genus: "쥐포켓몬",
+        emoji: "⚡",
+        reason: "톡톡 튀는 열정과 친근함으로 모두의 마음을 밝히는 인간 백만볼트입니다. 열린 마음으로 끊임없이 재미있는 상상을 현실로 만듭니다.",
+        compat: "INTJ",
+        compatName: "INTJ (뮤츠)"
+      },
+      "ENTP": {
+        id: 94, // 팬텀
+        name: "팬텀",
+        type: "고스트/독 타입",
+        genus: "그림자포켓몬",
+        emoji: "👻",
+        reason: "재치 있는 장난기와 독창적인 사상으로 틀을 깨부수는 토론가입니다. 변칙적이고 신선한 아이디어로 사람들을 매료시킵니다.",
+        compat: "INFJ",
+        compatName: "INFJ (뮤)"
+      },
+      "ESTJ": {
+        id: 68, // 괴력몬
+        name: "괴력몬",
+        type: "격투 타입",
+        genus: "괴력포켓몬",
+        emoji: "💪",
+        reason: "체계적인 조직력과 막강한 추진력으로 일을 효율적으로 완수합니다. 명확한 규칙과 지휘 아래 팀을 승리로 이끄는 리더입니다.",
+        compat: "INFP",
+        compatName: "INFP (이브이)"
+      },
+      "ESFJ": {
+        id: 26, // 라이츄
+        name: "라이츄",
+        type: "전기 타입",
+        genus: "쥐포켓몬",
+        emoji: "🌩️",
+        reason: "친절함과 화합을 중요시하며 그룹 전체의 기분을 세심하게 다독입니다. 남을 돕는 일에 앞장서며 훈훈한 온기를 내뿜습니다.",
+        compat: "ISFP",
+        compatName: "ISFP (메타몽)"
+      },
+      "ENFJ": {
+        id: 468, // 토게키스
+        name: "토게키스",
+        type: "페어리/비행 타입",
+        genus: "축복포켓몬",
+        emoji: "🕊️",
+        reason: "타인의 성장을 진심으로 응원하고 분쟁을 중재하는 카리스마 리더입니다. 따뜻한 메시지로 모두에게 기쁨과 평화를 가져다줍니다.",
+        compat: "ISFP",
+        compatName: "ISFP (메타몽)"
+      },
+      "ENTJ": {
+        id: 888, // 자시안
+        name: "자시안",
+        type: "페어리/강철 타입",
+        genus: "검왕포켓몬",
+        emoji: "⚔️",
+        reason: "단호한 결단력과 당당한 위엄으로 주저 없이 비전을 실현합니다. 검을 휘두르듯 방해물을 단숨에 제압하는 리더십을 갖췄습니다.",
+        compat: "INTP",
+        compatName: "INTP (후딘)"
+      }
+    };
+
+    let currentSelectedMBTI = null;
+
+    function initGrid() {
+      const grid = document.getElementById('mbti-grid');
+      grid.innerHTML = '';
+
+      Object.keys(pokemonDatabase).forEach(mbti => {
+        const item = pokemonDatabase[mbti];
+        const btn = document.createElement('button');
+        btn.className = 'bg-amber-50/80 hover:bg-yellow-200/70 border-2 border-amber-200/80 hover:border-amber-400 text-amber-900 rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center transition-all duration-200 transform hover:-translate-y-1 hover:shadow-md active:translate-y-0';
+        btn.onclick = (e) => {
+          createBurstEffect(e);
+          selectMBTI(mbti);
+        };
+
+        btn.innerHTML = `
+          <span class="font-jua text-xl sm:text-2xl text-amber-800">${mbti}</span>
+          <span class="text-xs font-semibold text-amber-700/80 mt-1">${item.name}</span>
+        `;
+        grid.appendChild(btn);
+      });
+    }
+
+    function selectMBTI(mbti) {
+      currentSelectedMBTI = mbti;
+      const data = pokemonDatabase[mbti];
+      if (!data) return;
+
+      // Update DOM Text
+      document.getElementById('res-mbti').innerText = mbti;
+      document.getElementById('res-name').innerText = data.name;
+      document.getElementById('res-genus').innerText = data.genus;
+      document.getElementById('res-type-badge').innerText = data.type;
+      document.getElementById('res-reason').innerText = data.reason;
+      document.getElementById('res-compat-name').innerText = data.compatName;
+
+      // Image & Fallback elements
+      const img = document.getElementById('res-img');
+      const loader = document.getElementById('img-loader');
+      const fallback = document.getElementById('res-fallback');
+
+      loader.classList.remove('hidden');
+      img.classList.add('opacity-0');
+      fallback.classList.add('hidden');
+
+      // High quality official artwork URL from PokeAPI
+      const artUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`;
+      img.src = artUrl;
+
+      // Update fallback data
+      document.getElementById('res-fallback-emoji').innerText = data.emoji;
+      document.getElementById('res-fallback-name').innerText = data.name;
+
+      // Screen Toggle
+      document.getElementById('selection-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleImageLoad() {
+      document.getElementById('img-loader').classList.add('hidden');
+      document.getElementById('res-img').classList.remove('opacity-0');
+    }
+
+    function handleImageError() {
+      // Safely show polished SVG/Emoji fallback on image load failure
+      document.getElementById('img-loader').classList.add('hidden');
+      document.getElementById('res-img').classList.add('hidden');
+      document.getElementById('res-fallback').classList.remove('hidden');
+    }
+
+    function selectMBTIByCompat() {
+      if (!currentSelectedMBTI) return;
+      const currentData = pokemonDatabase[currentSelectedMBTI];
+      if (currentData && currentData.compat) {
+        selectMBTI(currentData.compat);
+      }
+    }
+
+    function resetSelection() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('selection-screen').classList.remove('hidden');
+      const img = document.getElementById('res-img');
+      img.classList.remove('hidden');
+    }
+
+    const tiltContainer = document.getElementById('tilt-container');
+
+    tiltContainer.addEventListener('mousemove', (e) => {
+      if (window.innerWidth < 640) return; // Disable on small touch screens
+      const rect = tiltContainer.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+
+      tiltContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    tiltContainer.addEventListener('mouseleave', () => {
+      tiltContainer.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    });
+
+    function createBurstEffect(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const color = ['#FBBF24', '#F59E0B', '#FDE047', '#EF4444'][Math.floor(Math.random() * 4)];
+        const size = Math.random() * 8 + 6;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = color;
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+
+        const destinationX = (Math.random() - 0.5) * 120;
+        const destinationY = (Math.random() - 0.5) * 120;
+        particle.style.setProperty('--tw-translate-x', `${destinationX}px`);
+        particle.style.setProperty('--tw-translate-y', `${destinationY}px`);
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 800);
+      }
+    }
+
+    function copyShareLink() {
+      const textToCopy = `나의 MBTI 포켓몬 결과: [${currentSelectedMBTI}] ${pokemonDatabase[currentSelectedMBTI].name}! 너도 확인해봐 ⚡`;
+      
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => showToast());
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = textToCopy;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast();
+      }
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-4');
+      }, 2500);
+    }
+
+    // Initialize application on load
+    window.onload = function() {
+      initGrid();
+    };
+  </script>
+</body>
+</html>
