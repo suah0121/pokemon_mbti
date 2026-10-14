@@ -347,13 +347,3 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 ```
-
----
-
-### 🚀 스트림릿 클라우드(Streamlit Cloud) 배포 안내
-
-1. **`requirements.txt` 파일 생성**: 프로젝트 폴더 안에 아래 내용을 적은 파일 하나만 더 넣어두시면 됩니다.
-   ```text
-   streamlit
-   ```
-2. **GitHub 저장소에 올려 Streamlit Cloud에 연결**하면 인터넷 브라우저 어디서나 네온 핑크 & 파란색 톤의 고화질 단짝 포켓몬 프로그램을 실행하실 수 있습니다!
