@@ -293,8 +293,8 @@ POKEMON_DATABASE = {
 }
 
 # 4. 앱 헤더 선언
-st.markdown("<div class="main-title">MBTI x POKÉMON</div>", unsafe_allow_html=True)
-st.markdown("<div class="sub-title">⚡ 나만의 단짝 포켓몬 파트너 찾기 ⚡</div>", unsafe_allow_html=True)
+st.markdown('<div class="main-title">MBTI x POKÉMON</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-title">⚡ 나만의 단짝 포켓몬 파트너 찾기 ⚡</div>', unsafe_allow_html=True)
 
 # 5. MBTI 선택 셀렉트박스
 mbti_list = list(POKEMON_DATABASE.keys())
