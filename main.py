@@ -14,7 +14,6 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap');
 
-    /* 전체 배경 다크 네온 */
     .stApp {
         background: radial-gradient(circle at 50% 20%, #15052A 0%, #0A0118 70%, #05000C 100%);
         color: #FFFFFF;
@@ -44,7 +43,7 @@ st.markdown("""
         font-weight: 700;
     }
 
-    /* 드롭다운 셀렉트박스 가독성 스타일 */
+    /* 드롭다운 셀렉트박스 */
     div[data-baseweb="select"] {
         border-radius: 16px !important;
         border: 2px solid #FF007F !important;
@@ -58,44 +57,14 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* 결과 카드 컨테이너 */
-    .result-card-box {
-        background: rgba(18, 3, 38, 0.85);
-        border: 3px solid #00E5FF;
-        border-radius: 24px;
-        padding: 28px 20px;
-        box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
-        text-align: center;
-        margin-top: 15px;
+    /* 이미지 및 텍스트 정렬 */
+    .stImage {
+        display: flex;
+        justify-content: center;
     }
-
-    /* MBTI 뱃지 */
-    .mbti-badge {
-        display: inline-block;
-        background: linear-gradient(90deg, #FF007F, #9D00FF);
-        color: #FFFFFF;
-        font-size: 1.4rem;
-        font-weight: 900;
-        padding: 8px 24px;
-        border-radius: 30px;
-        box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-        margin-bottom: 15px;
-    }
-
-    /* 포켓몬 이름 */
-    .poke-name {
-        font-size: 2.3rem;
-        font-weight: 900;
-        color: #FFFFFF;
-        text-shadow: 0 0 12px #00E5FF;
-        margin-top: 10px;
-    }
-
-    .poke-en {
-        font-size: 1.1rem;
-        color: #FF77BC;
-        font-family: 'Orbitron', sans-serif;
-        margin-bottom: 15px;
+    
+    .stImage img {
+        filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.7));
     }
 
     /* 타입 뱃지 */
@@ -111,46 +80,43 @@ st.markdown("""
         margin: 4px;
     }
 
-    /* 설명 박스 */
-    .info-box-feature {
+    /* 정보 상자 커스텀 스타일 */
+    .feature-card {
         background: rgba(0, 229, 255, 0.1);
-        border-left: 4px solid #00E5FF;
+        border-left: 5px solid #00E5FF;
         border-radius: 12px;
-        padding: 16px 20px;
-        margin-top: 20px;
-        text-align: left;
+        padding: 18px 20px;
+        margin-top: 15px;
+        color: #E0F2FE;
         font-size: 1.15rem;
         line-height: 1.7;
-        color: #E0F2FE;
     }
 
-    .info-box-reason {
+    .reason-card {
         background: rgba(255, 0, 127, 0.12);
-        border-left: 4px solid #FF007F;
+        border-left: 5px solid #FF007F;
         border-radius: 12px;
-        padding: 16px 20px;
+        padding: 18px 20px;
         margin-top: 15px;
-        text-align: left;
+        color: #F3E8FF;
         font-size: 1.15rem;
         line-height: 1.7;
-        color: #F3E8FF;
     }
 
     .box-title-blue {
         color: #00E5FF;
         font-weight: 900;
-        font-size: 1.2rem;
-        margin-bottom: 6px;
+        font-size: 1.25rem;
+        margin-bottom: 8px;
     }
 
     .box-title-pink {
         color: #FF007F;
         font-weight: 900;
-        font-size: 1.2rem;
-        margin-bottom: 6px;
+        font-size: 1.25rem;
+        margin-bottom: 8px;
     }
 
-    /* 선택 대기 안내 창 */
     .welcome-card {
         background: rgba(18, 3, 38, 0.6);
         border: 2px dashed #FF007F;
@@ -298,7 +264,7 @@ POKEMON_DATABASE = {
 st.markdown('<div class="main-title">MBTI x POKÉMON</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">⚡ 나만의 단짝 포켓몬 파트너 찾기 ⚡</div>', unsafe_allow_html=True)
 
-# 5. MBTI 선택 셀렉트박스 (기본값 없음 / 선택 안내 문구 설정)
+# 5. MBTI 선택 셀렉트박스
 mbti_options = ["선택하세요"] + list(POKEMON_DATABASE.keys())
 selected_mbti = st.selectbox(
     "👉 당신의 MBTI 유형을 선택해 주세요!",
@@ -308,7 +274,6 @@ selected_mbti = st.selectbox(
 
 # 6. 결과 화면 제어
 if selected_mbti == "선택하세요":
-    # 아무것도 선택하지 않았을 때 노출되는 초기 안내 화면
     st.markdown("""
     <div class="welcome-card">
         <h2 style="color: #00E5FF; font-size: 1.6rem; margin-bottom: 10px;">🎮 준비 되셨나요?</h2>
@@ -317,7 +282,7 @@ if selected_mbti == "선택하세요":
     """, unsafe_allow_html=True)
 
 else:
-    # 선택했을 때 축하 효과 (풍선 + 네온 사탕 가루)
+    # 축하 효과
     st.balloons()
     
     confetti_js = """
@@ -333,31 +298,37 @@ else:
     """
     components.html(confetti_js, height=0, width=0)
 
-    # 포켓몬 정보 불러오기
+    # 포켓몬 데이터 불러오기
     poke = POKEMON_DATABASE[selected_mbti]
 
-    # 타입 뱃지 HTML 조합
-    types_html = "".join([f'<span class="type-badge">{t}</span>' for t in poke['types']])
-
-    # 결과 카드 출력
-    st.markdown(f"""
-    <div class="result-card-box">
-        <div class="mbti-badge">✨ YOUR MBTI: {selected_mbti} ✨</div>
-        <div>
-            <img src="{poke['img']}" style="width: 250px; height: 250px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.6)); margin: 10px 0;">
-        </div>
-        <div class="poke-name">{poke['ko_name']}</div>
-        <div class="poke-en">{poke['en_name']}</div>
-        <div style="margin-bottom: 15px;">{types_html}</div>
+    # Streamlit 컨테이너 내에서 안전하게 출력 (들여쓰기 마크다운 버그 완전 차단)
+    with st.container():
+        # MBTI 헤더 뱃지
+        st.markdown(f'<div style="text-align: center; margin-top: 15px;"><span style="background: linear-gradient(90deg, #FF007F, #9D00FF); color: #FFF; font-size: 1.4rem; font-weight: 900; padding: 8px 24px; border-radius: 30px; box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);">✨ YOUR MBTI: {selected_mbti} ✨</span></div>', unsafe_allow_html=True)
         
-        <div class="info-box-feature">
-            <div class="box-title-blue">📌 단짝 포켓몬의 특징</div>
-            {poke['feature']}
-        </div>
+        # 포켓몬 이미지
+        st.image(poke['img'], width=250)
+        
+        # 포켓몬 이름
+        st.markdown(f'<div style="text-align: center; font-size: 2.3rem; font-weight: 900; color: #FFF; text-shadow: 0 0 12px #00E5FF;">{poke["ko_name"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="text-align: center; font-size: 1.1rem; color: #FF77BC; font-family: Orbitron; margin-bottom: 10px;">{poke["en_name"]}</div>', unsafe_allow_html=True)
+        
+        # 타입 뱃지
+        types_html = "".join([f'<span class="type-badge">{t}</span>' for t in poke['types']])
+        st.markdown(f'<div style="text-align: center; margin-bottom: 20px;">{types_html}</div>', unsafe_allow_html=True)
 
-        <div class="info-box-reason">
-            <div class="box-title-pink">💖 어울리는 이유</div>
-            {poke['reason']}
+        # 특징 설명 박스
+        st.markdown(f'''
+        <div class="feature-card">
+            <div class="box-title-blue">📌 단짝 포켓몬의 특징</div>
+            {poke["feature"]}
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        ''', unsafe_allow_html=True)
+
+        # 어울리는 이유 박스
+        st.markdown(f'''
+        <div class="reason-card">
+            <div class="box-title-pink">💖 어울리는 이유</div>
+            {poke["reason"]}
+        </div>
+        ''', unsafe_allow_html=True)
