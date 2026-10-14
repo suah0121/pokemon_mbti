@@ -9,20 +9,19 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 2. 파이버펑크 / 네온 핑크 & 블루 커스텀 CSS 적용
+# 2. 형광 핑크 & 파란색 네온 테마 CSS
 st.markdown("""
 <style>
-    /* Google Fonts 로드 */
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Noto+Sans+KR:wght@400;700;900&display=swap');
 
-    /* 전체 배경 설정 (다크 네온 분위기) */
+    /* 전체 배경 다크 네온 */
     .stApp {
         background: radial-gradient(circle at 50% 20%, #15052A 0%, #0A0118 70%, #05000C 100%);
         color: #FFFFFF;
         font-family: 'Noto Sans KR', sans-serif;
     }
 
-    /* 메인 타이틀 커스텀 */
+    /* 메인 타이틀 */
     .main-title {
         font-family: 'Orbitron', 'Noto Sans KR', sans-serif;
         font-size: 2.8rem;
@@ -32,7 +31,7 @@ st.markdown("""
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         text-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
-        margin-top: -20px;
+        margin-top: -10px;
         margin-bottom: 5px;
     }
 
@@ -41,11 +40,11 @@ st.markdown("""
         font-size: 1.2rem;
         color: #00E5FF;
         text-shadow: 0 0 10px rgba(0, 229, 255, 0.6);
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         font-weight: 700;
     }
 
-    /* Streamlit Selectbox 라벨 & 스타일 커스텀 */
+    /* 드롭다운 셀렉트박스 가독성 스타일 */
     div[data-baseweb="select"] {
         border-radius: 16px !important;
         border: 2px solid #FF007F !important;
@@ -59,30 +58,18 @@ st.markdown("""
         font-weight: bold !important;
     }
 
-    /* 결과 카드 스타일 (글래스모피즘 + 네온 테두리) */
-    .pokemon-card {
-        background: rgba(18, 3, 38, 0.75);
+    /* 결과 카드 컨테이너 */
+    .result-card-box {
+        background: rgba(18, 3, 38, 0.85);
         border: 3px solid #00E5FF;
         border-radius: 24px;
-        padding: 30px 24px;
-        box-shadow: 0 0 30px rgba(0, 229, 255, 0.35), inset 0 0 15px rgba(255, 0, 127, 0.2);
-        backdrop-filter: blur(10px);
+        padding: 28px 20px;
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.35);
         text-align: center;
-        margin-top: 20px;
-        animation: pulseBorder 3s infinite alternate;
+        margin-top: 15px;
     }
 
-    @keyframes pulseBorder {
-        0% {
-            border-color: #00E5FF;
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
-        }
-        100% {
-            border-color: #FF007F;
-            box-shadow: 0 0 35px rgba(255, 0, 127, 0.6);
-        }
-    }
-
+    /* MBTI 뱃지 */
     .mbti-badge {
         display: inline-block;
         background: linear-gradient(90deg, #FF007F, #9D00FF);
@@ -93,26 +80,25 @@ st.markdown("""
         border-radius: 30px;
         box-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
         margin-bottom: 15px;
-        letter-spacing: 2px;
     }
 
+    /* 포켓몬 이름 */
     .poke-name {
         font-size: 2.3rem;
         font-weight: 900;
         color: #FFFFFF;
         text-shadow: 0 0 12px #00E5FF;
         margin-top: 10px;
-        margin-bottom: 5px;
     }
 
-    .poke-en-name {
+    .poke-en {
         font-size: 1.1rem;
         color: #FF77BC;
         font-family: 'Orbitron', sans-serif;
-        letter-spacing: 1.5px;
         margin-bottom: 15px;
     }
 
+    /* 타입 뱃지 */
     .type-badge {
         display: inline-block;
         background: rgba(0, 229, 255, 0.15);
@@ -123,48 +109,64 @@ st.markdown("""
         font-weight: 700;
         font-size: 1.05rem;
         margin: 4px;
-        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
     }
 
-    .reason-box {
-        background: rgba(255, 0, 127, 0.1);
-        border-left: 4px solid #FF007F;
+    /* 설명 박스 */
+    .info-box-feature {
+        background: rgba(0, 229, 255, 0.1);
+        border-left: 4px solid #00E5FF;
         border-radius: 12px;
-        padding: 18px 20px;
-        margin-top: 25px;
+        padding: 16px 20px;
+        margin-top: 20px;
         text-align: left;
         font-size: 1.15rem;
         line-height: 1.7;
-        color: #F3E8FF;
-        word-break: keep-all;
+        color: #E0F2FE;
     }
 
-    .feature-box {
-        background: rgba(0, 229, 255, 0.08);
-        border-left: 4px solid #00E5FF;
+    .info-box-reason {
+        background: rgba(255, 0, 127, 0.12);
+        border-left: 4px solid #FF007F;
         border-radius: 12px;
         padding: 16px 20px;
         margin-top: 15px;
         text-align: left;
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #E0F2FE;
-        word-break: keep-all;
+        font-size: 1.15rem;
+        line-height: 1.7;
+        color: #F3E8FF;
     }
 
-    .box-title {
+    .box-title-blue {
+        color: #00E5FF;
         font-weight: 900;
         font-size: 1.2rem;
         margin-bottom: 6px;
     }
+
+    .box-title-pink {
+        color: #FF007F;
+        font-weight: 900;
+        font-size: 1.2rem;
+        margin-bottom: 6px;
+    }
+
+    /* 선택 대기 안내 창 */
+    .welcome-card {
+        background: rgba(18, 3, 38, 0.6);
+        border: 2px dashed #FF007F;
+        border-radius: 20px;
+        padding: 40px 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. 16가지 MBTI 포켓몬 데이터베이스 (공식 PokeAPI 고화질 이미지 URL 연결)
+# 3. 16가지 MBTI 포켓몬 데이터베이스
 POKEMON_DATABASE = {
     "ISTJ": {
         "ko_name": "거북왕",
-        "en_name": "Blastoise",
+        "en_name": "BLASTOISE",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
         "types": ["물 💧"],
         "feature": "신중하고 신뢰할 수 있으며, 등 뒤의 포신으로 강력한 물대포를 정확하게 분사합니다.",
@@ -172,7 +174,7 @@ POKEMON_DATABASE = {
     },
     "ISFJ": {
         "ko_name": "해피너스",
-        "en_name": "Blissey",
+        "en_name": "BLISSEY",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/242.png",
         "types": ["노멀 🥚"],
         "feature": "사랑이 가득 담긴 알을 내어주어 아프거나 슬픈 타인을 진심으로 케어합니다.",
@@ -180,7 +182,7 @@ POKEMON_DATABASE = {
     },
     "INFJ": {
         "ko_name": "뮤",
-        "en_name": "Mew",
+        "en_name": "MEW",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png",
         "types": ["에스퍼 ✨"],
         "feature": "모든 포켓몬의 기술을 배울 수 있는 신비롭고 영리하며 순수한 환상의 포켓몬입니다.",
@@ -188,7 +190,7 @@ POKEMON_DATABASE = {
     },
     "INTJ": {
         "ko_name": "뮤츠",
-        "en_name": "Mewtwo",
+        "en_name": "MEWTWO",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png",
         "types": ["에스퍼 🧬"],
         "feature": "지능이 매우 높고 사이코 파워를 완벽히 통제하는 전략적 수재입니다.",
@@ -196,7 +198,7 @@ POKEMON_DATABASE = {
     },
     "ISTP": {
         "ko_name": "루카리오",
-        "en_name": "Lucario",
+        "en_name": "LUCARIO",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/448.png",
         "types": ["격투 🥊", "강철 🛡️"],
         "feature": "상대방의 파동을 감지하여 상황을 냉철하게 분석하고 순발력 있게 대처합니다.",
@@ -204,7 +206,7 @@ POKEMON_DATABASE = {
     },
     "ISFP": {
         "ko_name": "메타몽",
-        "en_name": "Ditto",
+        "en_name": "DITTO",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/132.png",
         "types": ["노멀 🫠"],
         "feature": "상대방의 모습과 능력을 있는 그대로 유연하게 복사해 맞추어 변화합니다.",
@@ -212,7 +214,7 @@ POKEMON_DATABASE = {
     },
     "INFP": {
         "ko_name": "이브이",
-        "en_name": "Eevee",
+        "en_name": "EEVEE",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png",
         "types": ["노멀 🦊"],
         "feature": "무한한 가능성을 품고 있으며, 환경과 진심에 따라 다양한 형태로 아름답게 진화합니다.",
@@ -220,7 +222,7 @@ POKEMON_DATABASE = {
     },
     "INTP": {
         "ko_name": "후딘",
-        "en_name": "Alakazam",
+        "en_name": "ALAKAZAM",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/65.png",
         "types": ["에스퍼 🥄"],
         "feature": "IQ 5000에 달하는 슈퍼 브레인으로 세상의 모든 이치와 논리를 기억하고 계산합니다.",
@@ -228,7 +230,7 @@ POKEMON_DATABASE = {
     },
     "ESTP": {
         "ko_name": "리자몽",
-        "en_name": "Charizard",
+        "en_name": "CHARIZARD",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
         "types": ["불꽃 🔥", "비행 🕊️"],
         "feature": "강한 상대일수록 승부욕이 타오르며 뜨거운 불꽃을 내뿜는 과감한 행동파입니다.",
@@ -236,7 +238,7 @@ POKEMON_DATABASE = {
     },
     "ESFP": {
         "ko_name": "푸린",
-        "en_name": "Jigglypuff",
+        "en_name": "JIGGLYPUFF",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png",
         "types": ["노멀 🎤", "페어리 ✨"],
         "feature": "무대 위에서 노래 부르는 것을 즐기며 통통 튀는 사랑스러운 자태로 주목받습니다.",
@@ -244,7 +246,7 @@ POKEMON_DATABASE = {
     },
     "ENFP": {
         "ko_name": "피카츄",
-        "en_name": "Pikachu",
+        "en_name": "PIKACHU",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
         "types": ["전기 ⚡"],
         "feature": "호기심이 풍부하고 밝은 전기를 뿜어내어 사방을 활기차게 만드는 피스메이커입니다.",
@@ -252,7 +254,7 @@ POKEMON_DATABASE = {
     },
     "ENTP": {
         "ko_name": "팬텀",
-        "en_name": "Gengar",
+        "en_name": "GENGAR",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png",
         "types": ["고스트 👻", "독 🧪"],
         "feature": "장난기가 가득하며 통념을 깨는 재치 있는 허점 공격으로 상대를 기분 좋게 놀라게 합니다.",
@@ -260,7 +262,7 @@ POKEMON_DATABASE = {
     },
     "ESTJ": {
         "ko_name": "괴력몬",
-        "en_name": "Machamp",
+        "en_name": "MACHAMP",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png",
         "types": ["격투 💪"],
         "feature": "4개의 팔로 1초에 1000번의 펀치를 날릴 만큼 압도적인 실행력과 규칙적인 강함을 자랑합니다.",
@@ -268,7 +270,7 @@ POKEMON_DATABASE = {
     },
     "ESFJ": {
         "ko_name": "라이츄",
-        "en_name": "Raichu",
+        "en_name": "RAICHU",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png",
         "types": ["전기 🐭"],
         "feature": "긴 꼬리로 전기를 땅으로 방출하여 동료들이 놀라지 않게 보호하는 상냥하고 스윗한 포켓몬입니다.",
@@ -276,7 +278,7 @@ POKEMON_DATABASE = {
     },
     "ENFJ": {
         "ko_name": "토게키스",
-        "en_name": "Togekiss",
+        "en_name": "TOGEKISS",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/468.png",
         "types": ["페어리 ✨", "비행 🕊️"],
         "feature": "서로를 존중하고 다툼이 없는 평화로운 곳에 나타나 은혜로운 축복을 나누어 줍니다.",
@@ -284,7 +286,7 @@ POKEMON_DATABASE = {
     },
     "ENTJ": {
         "ko_name": "자시안",
-        "en_name": "Zacian",
+        "en_name": "ZACIAN",
         "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/888.png",
         "types": ["페어리 🗡️", "강철 🛡️"],
         "feature": "검을 입에 물고 전장을 누비며 한 치의 오차도 없이 전설적인 승리를 이끄는 당당한 전사입니다.",
@@ -292,30 +294,38 @@ POKEMON_DATABASE = {
     }
 }
 
-# 4. 앱 헤더 선언
+# 4. 헤더
 st.markdown('<div class="main-title">MBTI x POKÉMON</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">⚡ 나만의 단짝 포켓몬 파트너 찾기 ⚡</div>', unsafe_allow_html=True)
 
-# 5. MBTI 선택 셀렉트박스
-mbti_list = list(POKEMON_DATABASE.keys())
+# 5. MBTI 선택 셀렉트박스 (기본값 없음 / 선택 안내 문구 설정)
+mbti_options = ["선택하세요"] + list(POKEMON_DATABASE.keys())
 selected_mbti = st.selectbox(
     "👉 당신의 MBTI 유형을 선택해 주세요!",
-    options=mbti_list,
-    index=10 # 기본 선택: ENFP
+    options=mbti_options,
+    index=0
 )
 
-# 6. 매칭 결과 표시 및 축하 효과
-if selected_mbti:
-    # 스트림릿 축하 기본 풍선 애니메이션 실행
-    st.balloons()
+# 6. 결과 화면 제어
+if selected_mbti == "선택하세요":
+    # 아무것도 선택하지 않았을 때 노출되는 초기 안내 화면
+    st.markdown("""
+    <div class="welcome-card">
+        <h2 style="color: #00E5FF; font-size: 1.6rem; margin-bottom: 10px;">🎮 준비 되셨나요?</h2>
+        <p style="color: #FF77BC; font-size: 1.15rem; margin: 0;">위 드롭다운 메뉴에서 MBTI를 누르면<br>당신과 완벽히 어울리는 포켓몬이 등장합니다!</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # 네온 사운드/파티클 캔버스 효과 JS 추가
+else:
+    # 선택했을 때 축하 효과 (풍선 + 네온 사탕 가루)
+    st.balloons()
+    
     confetti_js = """
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         confetti({
-            particleCount: 100,
-            spread: 70,
+            particleCount: 120,
+            spread: 80,
             origin: { y: 0.6 },
             colors: ['#FF007F', '#00E5FF', '#FFFFFF', '#FFE066']
         });
@@ -323,29 +333,31 @@ if selected_mbti:
     """
     components.html(confetti_js, height=0, width=0)
 
+    # 포켓몬 정보 불러오기
     poke = POKEMON_DATABASE[selected_mbti]
 
-    # 포켓몬 결과 카드 생성
+    # 타입 뱃지 HTML 조합
     types_html = "".join([f'<span class="type-badge">{t}</span>' for t in poke['types']])
 
-    card_html = f"""
-    <div class="pokemon-card">
+    # 결과 카드 출력
+    st.markdown(f"""
+    <div class="result-card-box">
         <div class="mbti-badge">✨ YOUR MBTI: {selected_mbti} ✨</div>
-        <br>
-        <img src="{poke['img']}" style="width: 260px; height: 260px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.6)); margin: 10px 0;" alt="{poke['ko_name']}">
+        <div>
+            <img src="{poke['img']}" style="width: 250px; height: 250px; object-fit: contain; filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.6)); margin: 10px 0;">
+        </div>
         <div class="poke-name">{poke['ko_name']}</div>
-        <div class="poke-en-name">{poke['en_name'].upper()}</div>
+        <div class="poke-en">{poke['en_name']}</div>
         <div style="margin-bottom: 15px;">{types_html}</div>
         
-        <div class="feature-box">
-            <div class="box-title" style="color: #00E5FF;">📌 단짝 포켓몬의 특징</div>
+        <div class="info-box-feature">
+            <div class="box-title-blue">📌 단짝 포켓몬의 특징</div>
             {poke['feature']}
         </div>
 
-        <div class="reason-box">
-            <div class="box-title" style="color: #FF007F;">💖 어울리는 이유</div>
+        <div class="info-box-reason">
+            <div class="box-title-pink">💖 어울리는 이유</div>
             {poke['reason']}
         </div>
     </div>
-    """
-    st.markdown(card_html, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
